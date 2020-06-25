@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<link rel="stylesheet" type="text/css" href="mystyle.css">
+<button onclick="myFunction()">Insert</button>
+<body style="background-color:powderblue;"></body>
+<p>Regular</p>
+<p>&nbsp;SKU:</p>
+<p><input id="SKU" name="fname" type="text" /> <br />Date Created:&nbsp;</p> 
+<p><input id="Date Created" name="fname" type="text" /> <br />Brand</p>
+<p><input id="Brand" name="fname" type="text" /><br />Description</p>
+<p><input id="Description" name="fname" type="text" /></p>
+<p>Category</p>
+<p><input id="Category" name="fname" type="text" /></p>
+<p><br />QTY of REG PACKS</p>
+<p><input id="QTY of REG PACKS" name="fname" type="text" /> <br />QTY of PLUS PACKS</p>
+<p><input id="QTY of PLUS PACKS" name="fname" type="text" /></p>
+<p><label for="cars">Pick a reg size: </label></p>
+<p><select id="REGSIZE" name="cars">
+<option value=""></option>
+<option value="2(S), 2(M), 2(L)">2(S), 2(M), 2(L)</option>
+<option value="1(4), 1(6), 1(8), 1(10), 1(12), 1(14)">1(4), 1(6), 1(8), 1(10), 1(12), 1(14)</option>
+<option value="3 per pack">3 per pack</option>
+<option value="1 per pack">1 per pack</option>
+<option value="7, 8, 9, 10, 11">7, 8, 9, 10, 11</option>
+</select></p>
+<p><label for="PLUSSIZE">Pick a plus size: </label></p>
+<p><select id="PLUSSIZE" name="cars">
+<option value=""></option>
+<option value="2(XL), 2(2XL), 2(3XL)">2(XL), 2(2XL), 2(3XL)</option>
+<option value="1(14), 2(16), 2(18), 1(20), 1(22)">1(14), 2(16), 2(18), 1(20), 1(22)</option>
+<option value="3 per pack">3 per pack</option>
+<option value="1 per pack">1 per pack</option>
+<option value="7, 8, 9, 10, 11">7, 8, 9, 10, 11</option>
+</select><br />Fabrication</p>
+<p><input id="Fabrication" name="fname" type="text" /></p>
+<p><br />PP Sample(Y/N)</p>
+<p><input id="PP Sample(Y/N)" name="fname" type="text" /></p>
+<p><br />PP Sample Size</p>
+<p><input id="PP Sample Size" name="fname" type="text" /></p>
+<p><br />Designer</p>
+<p><input id="Designer" name="fname" type="text" /></p>
+<p><br />Vendor</p>
+<p><input id="Vendor" name="fname" type="text" /></p>
+<p><br />Ship Date</p>
+<p><input id="Ship Date" name="fname" type="text" /></p>
+<p><br />No Later Than</p>
+<p><input id="No Later Than" name="fname" type="text" /></p>
+<p><br />Shipping Method</p>
+<p><input id="Shipping Method" name="fname" type="text" /></p>
+<p><br />Status</p>
+<p><input id="Status" name="Status" type="text" /></p>
+
+<div style="position: absolute; left: 800px; top: 0px">
+<p>Accessory</p>
+<button onclick="myFunctionA()">Insert Accessory</button>
+
+<p>&nbsp;SKU:</p>
+<p ><input id="SKUa" name="fname" type="text" /> <br />Date Created:&nbsp;</p>
+<p><input id="Date Createda" name="fname" type="text" /> <br />Brand</p>
+<p><input id="Branda" name="fname" type="text" /><br />Description</p>
+<p><input id="Descriptiona" name="fname" type="text" /></p>
+<p>Category</p>
+<p><input id="Categorya" name="fname" type="text" /></p>
+<p>Break Down For Box</p>
+<p><input id="BREAKDOWNFORBOXa" name="fname" type="text" /></p>
+<p>Box Pack</p>
+<p><input id="BoxPacka" name="fname" type="text" /></p>
+<p>Order</p>
+<p><input id="OrderA" name="fname" type="text" /></p>
+<p>PP Sample(Y/N)</p>
+<p><input id="PP Sample(Y/N)a" name="fname" type="text" /></p>
+<p>PP Sample Size</p>
+<p><input id="PP Sample Sizea" name="fname" type="text" /></p>
+<p>DESIGNER</p>
+<p><input id="DESIGNERa" name="fname" type="text" /></p>
+<p>VENDOR</p>
+<p><input id="VENDORa" name="fname" type="text" /></p>
+<p>SHIP DATE</p>
+<p><input id="SHIP DATEa" name="fname" type="text" /></p>
+<p>No Later Than</p>
+<p><input id="No Later Thana" name="fname" type="text" /></p>
+<p>Shipping Method</p>
+<p><input id="ShippingMethoda" name="fname" type="text" /></p>
+<p>STATUS</p>
+<p><input id="STATUSa" name="fname" type="text" /></p>
+</div>
+  <script>
+    const IPV4 = "192.168.1.63"
+    function myFunction() {
+      
+      console.log("CLICKED!");
+      window.open("http://".concat(IPV4,":8080/Insert?SKU=").concat(document.getElementById("SKU").value)
+      .concat("&DateCreated=",document.getElementById("Date Created").value)
+      .concat("&Brand=",document.getElementById("Brand").value)
+      .concat("&Description=",document.getElementById("Description").value)
+      .concat("&Category=",document.getElementById("Category").value)
+      .concat("&QTYofREGPACKS=",document.getElementById("QTY of REG PACKS").value)
+      .concat("&QTYofPLUSPACKS=",document.getElementById("QTY of PLUS PACKS").value)
+      .concat("&RegSizeRun=",document.getElementById("REGSIZE").value)
+      .concat("&PlusSizeRun=",document.getElementById("PLUSSIZE").value)
+      .concat("&Frabication=",document.getElementById("Fabrication").value)
+      .concat("&PPSample=",document.getElementById("PP Sample(Y/N)").value)
+      .concat("&PPSampleS=",document.getElementById("PP Sample Size").value)
+      .concat("&Designer=",document.getElementById("Designer").value)
+      .concat("&Vendor=",document.getElementById("Vendor").value)
+      .concat("&ShipDate=",document.getElementById("Ship Date").value)
+      .concat("&NoLaterThan=",document.getElementById("No Later Than").value)
+      .concat("&ShippingMethod=",document.getElementById("Shipping Method").value)
+      .concat("&Status=",document.getElementById("Status").value)
+      )
+    }
+    function myFunctionA() {
+        window.open("http://".concat(IPV4,":8080/InsertA?SKU=").concat(document.getElementById("SKUa").value) 
+        .concat("&DateCreated=",document.getElementById("Date Createda").value)
+        .concat("&Brand=",document.getElementById("Branda").value)
+        .concat("&Description=",document.getElementById("Descriptiona").value)
+        .concat("&Category=",document.getElementById("Categorya").value)
+        .concat("&BREAKDOWNFORBOX=",document.getElementById("BREAKDOWNFORBOXa").value)
+        .concat("&BoxPack=",document.getElementById("BoxPacka").value)
+        .concat("&Order=",document.getElementById("Ordera").value)
+        .concat("&PPSample=",document.getElementById("PP Sample(Y/N)a").value)
+        .concat("&PPSampleS=",document.getElementById("PP Sample Sizea").value)
+        .concat("&DESIGNER=",document.getElementById("DESIGNERa").value)
+        .concat("&VENDOR=",document.getElementById("VENDORa").value)
+        .concat("&SHIPDATE=",document.getElementById("SHIP DATEa").value)
+        .concat("&NoLaterThan=",document.getElementById("No Later Thana").value)
+        .concat("&ShippingMethod=",document.getElementById("ShippingMethoda").value)
+        .concat("&STATUS=",document.getElementById("STATUSa").value)
+        )
+    }
+
+
+    </script>
