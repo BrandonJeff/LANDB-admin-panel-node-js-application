@@ -3,34 +3,74 @@
 
 <body style="background-color:powderblue;"></body>
 <p>&nbsp;Input UPC codes:</p>
-<p><input id="InputUpc" name="fname" type="text" /> 
+<p><input id="InputUpc" name="fname" type="text" /></p>
 <p>&nbsp;Input Sheet Id:</p>
-<p><input id="Input" name="fname" type="text" /> 
+<p><input id="Input" name="fname" type="text" /></p>
 <p>Output Gs1 Sheet Id:</p>
-<p><input id="Output" name="fname" type="text" /> 
+<p><input id="Output" name="fname" type="text" /></p>
 
 <button onclick="myFunction()">Insert Each</button>
 <button onclick="myFunctionA()">Insert Mixed</button>
 
 
+
+<div style="position: absolute; left: 800px; top: 0px">
+<p>Sheet Id: </p>
+<p><input id="OutputI" name="fname" type="text" /></p>
+<p>DESCRIPTION: </p>
+<p><input id="InputDESCRIPTION" name="fname" type="text" /></p>
+<p>SKU: </p>
+<p><input id="InputSKU" name="fname" type="text" /></p>
+<p>REGULAR_SIZE_RUN: </p>
+<p><select id="InputREGULAR_SIZE_RUN" name="cars">
+  <option value=""></option>
+  <option value="2(S), 2(M), 2(L)">2(S), 2(M), 2(L)</option>
+  <option value="1(4), 1(6), 1(8), 1(10), 1(12), 1(14)">1(4), 1(6), 1(8), 1(10), 1(12), 1(14)</option>
+  <option value="3 per pack">3 per pack</option>
+  <option value="1 per pack">1 per pack</option>
+  <option value="7, 8, 9, 10, 11">7, 8, 9, 10, 11</option>
+</select>
+<p>PLUS_SIZE_RUN: </p>
+<p><select id="InputPLUS_SIZE_RUN" name="cars">
+  <option value=""></option>
+  <option value="2(XL), 2(2XL), 2(3XL)">2(XL), 2(2XL), 2(3XL)</option>
+  <option value="1(14), 2(16), 2(18), 1(20), 1(22)">1(14), 2(16), 2(18), 1(20), 1(22)</option>
+  <option value="3 per pack">3 per pack</option>
+  <option value="1 per pack">1 per pack</option>
+  <option value="7, 8, 9, 10, 11">7, 8, 9, 10, 11</option>
+</select>
+<p>BPB: </p>
+<p><input id="InputBPB" name="fname" type="text" /></p>
+<button onclick="myFunctionI()">Insert Data</button>
+</div>
+  
   <script>
     const IPV4 = "192.168.1.63"
     function myFunction() {
-      
+
       console.log("CLICKED!");
-      window.open("http://".concat(IPV4,":8080/AdminPanel?action=TGS1")
-      .concat("&var1=",document.getElementById("Input").value)
-      .concat("&var2=",document.getElementById("Output").value)
-      .concat("&var3=",document.getElementById("InputUpc").value)
+      window.open("http://".concat(IPV4, ":8080/AdminPanel?action=TGS1")
+        .concat("&var1=", document.getElementById("Input").value)
+        .concat("&var2=", document.getElementById("Output").value)
+        .concat("&var3=", document.getElementById("InputUpc").value)
       )
     }
     function myFunctionA() {
-        window.open("http://".concat(IPV4,":8080/AdminPanel?action=MixedCases")
-        .concat("&var1=",document.getElementById("Output").value)
-        .concat("&var2=","N/A")
-        .concat("&var3=","N/A")
-        )
+      window.open("http://".concat(IPV4, ":8080/AdminPanel?action=MixedCases")
+        .concat("&var1=", document.getElementById("Output").value)
+        .concat("&var2=", "N/A")
+        .concat("&var3=", "N/A")
+      )
+    }
+    function myFunctionI() {
+      window.open("http://".concat(IPV4, ":8080/AdminPanel?action=DATA&var1=",document.getElementById("OutputI").value,"&var2=") 
+        .concat(document.getElementById("InputDESCRIPTION").value,"|")
+        .concat(document.getElementById("InputSKU").value,"|")
+        .concat(document.getElementById("InputREGULAR_SIZE_RUN").value,"|")
+        .concat(document.getElementById("InputPLUS_SIZE_RUN").value,"|")
+        .concat(document.getElementById("InputBPB").value,"|")
+      )
     }
 
 
-    </script>
+  </script>
