@@ -6,7 +6,7 @@ var bodyParser = require("body-parser");
 const Discord = require("discord.js");
 const IPV4 = "192.168.1.63"
 const fileUpload = require('express-fileupload');
-const token = ""
+const token = "NzE3NDg2OTEzODQxMjY2NzMw.XtbH-w.5khxQqgpqOSLiei00-X2V2eRKCg"
 const client = new Discord.Client();
 const Lib = ["SKU", "DATE CREATED", "BRAND", "DESCRIPTION", "CATEGORY", "QTY OF REG PACKS", "QTY OF PLUS PACKS", "REGULAR SIZE RUN", "PLUS SIZE RUN", "FABRICATION", "PP SAMPLE (Y/N)", "PP SAMPLE SIZE", "DESIGNER", "VENDOR", "SHIP DATE", "NO LATER THAN", "SHIPPING METHOD", "STATUS"]
 const LibA = ["SKU", "DATE CREATED", "BRAND", "DESCRIPTION", "CATEGORY", "BREAKDOWN FOR BOX", "BOX PACK", "ORDER", "PP SAMPLE (Y/N)", "PP SAMPLE SIZE", "DESIGNER", "VENDOR", "SHIP DATE", "NO LATER THAN", "SHIPPING METHOD", "STATUS"]
@@ -288,8 +288,12 @@ app.get('/AdminPanel', function (req, res) {
       };
     };
     input.push(curr);
+    function repaprow(DESC,SKU,RSR,PSR,BPB) {
+      insertsheet.addRow(1, {DESCRIPTION: DESC,SKU: SKU,REGULAR_SIZE_RUN: RSR,PLUS_SIZE_RUN: PSR,BPB: BPB}, function () {if (err) {repaprow(DESC,SKU,RSR,PSR,BPB);}});
+    }
     insertsheet.useServiceAccountAuth(creds, function () {
-      insertsheet.addRow(1, {DESCRIPTION: input[0],SKU: input[1],REGULAR_SIZE_RUN: input[2],PLUS_SIZE_RUN: input[3],BPB: input[4]}, function () {});
+      repaprow(input[0],input[1],input[2],input[3],input[4])
+      //insertsheet.addRow(1, {DESCRIPTION: input[0],SKU: input[1],REGULAR_SIZE_RUN: input[2],PLUS_SIZE_RUN: input[3],BPB: input[4]}, function () {});
     });
     res.send("Inerting ".concat(" | ",input))
   }
@@ -323,9 +327,11 @@ app.get('/AdminPanel', function (req, res) {
     UPCS.push(curr);
     console.log(UPCS)
     console.log("3 |".concat(UPCS.length))
-
+    var debugcount = 0
     OrdersSheet.useServiceAccountAuth(creds, async function (err) {
+      function gr(){
 
+      };
       // Get all of the rows from the spreadsheet.
       OrdersSheet.getRows(1, async function (err, rows) {
         //console.log("len |".concat(Object.keys(rows).length));
@@ -340,7 +346,7 @@ app.get('/AdminPanel', function (req, res) {
           tempvals["REGULAR_SIZE_RUN"] = rows[i].regularsizerun
           tempvals["PLUS_SIZE_RUN"] = rows[i].plussizerun
           tempvals["BPB"] = rows[i].bpb
-          console.log(tempvals)
+          //console.log(tempvals)
           gsrows.push(tempvals)
 
         }
@@ -364,40 +370,63 @@ app.get('/AdminPanel', function (req, res) {
           // }
 
 
-
+          function apRow(last, GTIN ,PL, DESC, SKU, currdesc,currgt, currsku, currqua, currcgt){
+            console.log("".concat(last, GTIN ,PL, DESC, SKU))
+            if (last) {
+              GS1Sheet.addRow(1, { GTIN: GTIN, PackagingLevel: PL, Description: DESC, SKU: SKU }, function (err) { if (err) { apRow(true,GTIN,PL,DESC,SKU, currdesc,currgt, currsku, currqua, currcgt ) }else{
+                const currtempvals = [["DESC"], ["GTIN"], ["SKU"], ["Quantity"], ["ChildGTINs"]]
+                currtempvals["DESC"] = currdesc
+                currtempvals["GTIN"] = currgt
+                currtempvals["SKU"] = currsku
+                currtempvals["Quantity"] = currqua
+                currtempvals["ChildGTINs"] = currcgt
+                mixedcases.push(currtempvals)
+                debugcount = debugcount + 1
+                console.log("".concat("DEBUG COUNT | ",debugcount))
+              } 
+              
+            });
+            }else{
+              
+              GS1Sheet.addRow(1, { GTIN: GTIN, PackagingLevel: "Each", Description: DESC, SKU: SKU }, function (err) { if (err) { apRow(false,GTIN,"Each",DESC,SKU) } });
+            };
+          };
           for (i = 0; i < gsrows.length; i++) {
 
             if (gsrows[i].REGULAR_SIZE_RUN == "2(S), 2(M), 2(L)") {
+              
               const currUPCS = [];
 
               upccount = upccount + 1
               const DESCRIPTION = gsrows[i].DESCRIPTION
               const SKU = gsrows[i].SKU
               currUPCS.push(UPCS[upccount])
-
-              GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" Small"), SKU: SKU.concat("-S") }, function (err) { if (err) { console.log(err); } });
+              apRow(false,"'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" Small"),SKU.concat("-S"))
+              //GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" Small"), SKU: SKU.concat("-S") }, function (err) { if (err) { console.log(err); } });
+              upccount = upccount + 1
+              currUPCS.push(UPCS[upccount])
+              apRow(false,"'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" Medium"),SKU.concat("-M"))
+              //GS1Sheet.addRow(1, { GTIN:"'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" Medium"), SKU: SKU.concat("-M") }, function (err) { if (err) { console.log(err); } });
               upccount = upccount + 1
               currUPCS.push(UPCS[upccount])
 
-              GS1Sheet.addRow(1, { GTIN:"'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" Medium"), SKU: SKU.concat("-M") }, function (err) { if (err) { console.log(err); } });
-              upccount = upccount + 1
-              currUPCS.push(UPCS[upccount])
-
-
+              
               const currdesc = gsrows[i].DESCRIPTION
               const currsku = gsrows[i].SKU
-              GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" Large"), SKU: SKU.concat("-L") }, function () {
-                upccount = upccount + 1
-                const currtempvals = [["DESC"], ["GTIN"], ["SKU"], ["Quantity"], ["ChildGTINs"]]
-                currtempvals["DESC"] = currdesc.concat(" Regular Size")
-                currtempvals["GTIN"] = "'".concat(UPCS[upccount])
-                currtempvals["SKU"] = currsku
-                currtempvals["Quantity"] = "2~2~2"
-                currtempvals["ChildGTINs"] = "".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2])
-                mixedcases.push(currtempvals)
+              upccount = upccount + 1
+              apRow(true,"'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" Large"),SKU.concat("-L"),currdesc.concat(" Regular Size"),"'".concat(UPCS[upccount]),currsku,"2~2~2","".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2]))
+              // GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" Large"), SKU: SKU.concat("-L") }, function () {
+                
+              //   const currtempvals = [["DESC"], ["GTIN"], ["SKU"], ["Quantity"], ["ChildGTINs"]]
+              //   currtempvals["DESC"] = currdesc.concat(" Regular Size")
+              //   currtempvals["GTIN"] = "'".concat(UPCS[upccount])
+              //   currtempvals["SKU"] = currsku
+              //   currtempvals["Quantity"] = "2~2~2"
+              //   currtempvals["ChildGTINs"] = "".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2])
+              //   mixedcases.push(currtempvals)
 
-                //GS1Sheet.addRow(1, { GTIN: UPCS[upccount], PackagingLevel: "Mixed Case", Description: currdesc.concat(" Regular Size"), SKU: currsku, Quantity: "2~2~2", ChildGTINs: "".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2]) }, function (err) { if (err) { console.log(err); } });
-              });
+              //   //GS1Sheet.addRow(1, { GTIN: UPCS[upccount], PackagingLevel: "Mixed Case", Description: currdesc.concat(" Regular Size"), SKU: currsku, Quantity: "2~2~2", ChildGTINs: "".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2]) }, function (err) { if (err) { console.log(err); } });
+              // });
 
 
 
@@ -409,30 +438,31 @@ app.get('/AdminPanel', function (req, res) {
               const DESCRIPTION = gsrows[i].DESCRIPTION
               const SKU = gsrows[i].SKU
               currUPCS.push(UPCS[upccount])
-
-              GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" XL"), SKU: SKU.concat("-XL") }, function (err) { if (err) { console.log(err); } });
+              apRow(false,"'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" XL"),SKU.concat("-XL"))
+              //GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" XL"), SKU: SKU.concat("-XL") }, function (err) { if (err) { console.log(err); } });
               upccount = upccount + 1
               currUPCS.push(UPCS[upccount])
-
-              GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 2XL"), SKU: SKU.concat("-2XL") }, function (err) { if (err) { console.log(err); } });
+              apRow(false,"'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" 2XL"),SKU.concat("-2XL"))
+              //GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 2XL"), SKU: SKU.concat("-2XL") }, function (err) { if (err) { console.log(err); } });
               upccount = upccount + 1
               currUPCS.push(UPCS[upccount])
 
 
               const currdesc = gsrows[i].DESCRIPTION
               const currsku = gsrows[i].SKU
-              GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 3XL"), SKU: SKU.concat("-3XL") }, function () {
-                upccount = upccount + 1
-                const currtempvals = [["DESC"], ["GTIN"], ["SKU"], ["Quantity"], ["ChildGTINs"]]
-                currtempvals["DESC"] = currdesc.concat(" Plus Size")
-                currtempvals["GTIN"] = "'".concat(UPCS[upccount])
-                currtempvals["SKU"] = currsku.concat("-X")
-                currtempvals["Quantity"] = "2~2~2"
-                currtempvals["ChildGTINs"] = "".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2])
-                mixedcases.push(currtempvals)
+              apRow(true,"'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" 3XL"),SKU.concat("-3XL"),currdesc.concat(" Plus Size"),"'".concat(UPCS[upccount]),currsku.concat("-X"),"2~2~2","".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2]))
+              // GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 3XL"), SKU: SKU.concat("-3XL") }, function () {
+              //   upccount = upccount + 1
+              //   const currtempvals = [["DESC"], ["GTIN"], ["SKU"], ["Quantity"], ["ChildGTINs"]]
+              //   currtempvals["DESC"] = currdesc.concat(" Plus Size")
+              //   currtempvals["GTIN"] = "'".concat(UPCS[upccount])
+              //   currtempvals["SKU"] = currsku.concat("-X")
+              //   currtempvals["Quantity"] = "2~2~2"
+              //   currtempvals["ChildGTINs"] = "".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2])
+              //   mixedcases.push(currtempvals)
 
-                //GS1Sheet.addRow(1, { GTIN: UPCS[upccount], PackagingLevel: "Mixed Case", Description: currdesc.concat(" Plus Size"), SKU: currsku.concat("-X"), Quantity: "2~2~2", ChildGTINs: "".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2]) }, function (err) { if (err) { console.log(err); } });
-              });
+              //   //GS1Sheet.addRow(1, { GTIN: UPCS[upccount], PackagingLevel: "Mixed Case", Description: currdesc.concat(" Plus Size"), SKU: currsku.concat("-X"), Quantity: "2~2~2", ChildGTINs: "".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2]) }, function (err) { if (err) { console.log(err); } });
+              // });
 
 
 
@@ -445,40 +475,42 @@ app.get('/AdminPanel', function (req, res) {
               currUPCS.push(UPCS[upccount])
               var DESCRIPTION = gsrows[i].DESCRIPTION
               var SKU = gsrows[i].SKU
-              GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 4"), SKU: gsrows[i].SKU.concat("-4") });
+              apRow(false,"'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" 4"),SKU.concat("-4"))
+              //GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 4"), SKU: gsrows[i].SKU.concat("-4") });
               upccount = upccount + 1
               currUPCS.push(UPCS[upccount])
-
-              GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 6"), SKU: gsrows[i].SKU.concat("-6") }, function (err) { if (err) { console.log(err); } });
+              apRow(false,"'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" 6"),SKU.concat("-6"))
+              //GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 6"), SKU: gsrows[i].SKU.concat("-6") }, function (err) { if (err) { console.log(err); } });
               upccount = upccount + 1
               currUPCS.push(UPCS[upccount])
-
-              GS1Sheet.addRow(1, { GTIN:"'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 8"), SKU: gsrows[i].SKU.concat("-8") }, function (err) { if (err) { console.log(err); } });
+              apRow(false,"'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" 8"),SKU.concat("-8"))
+              //GS1Sheet.addRow(1, { GTIN:"'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 8"), SKU: gsrows[i].SKU.concat("-8") }, function (err) { if (err) { console.log(err); } });
               upccount = upccount + 1
               currUPCS.push(UPCS[upccount])
-
-              GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 10"), SKU: gsrows[i].SKU.concat("-10") }, function (err) { if (err) { console.log(err); } });
+              apRow(false,"'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" 10"),SKU.concat("-10"))
+              //GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 10"), SKU: gsrows[i].SKU.concat("-10") }, function (err) { if (err) { console.log(err); } });
               upccount = upccount + 1
               currUPCS.push(UPCS[upccount])
-
+              apRow(false,"'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" 12"),SKU.concat("-12"))
               GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 12"), SKU: gsrows[i].SKU.concat("-12") }, function (err) { if (err) { console.log(err); } });
               upccount = upccount + 1
               currUPCS.push(UPCS[upccount])
               const currdesc = gsrows[i].DESCRIPTION
               const currsku = gsrows[i].SKU
-              GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 14"), SKU: gsrows[i].SKU.concat("-14") }, function () {
-                upccount = upccount + 1
-                const currtempvals = [["DESC"], ["GTIN"], ["SKU"], ["Quantity"], ["ChildGTINs"]]
-                currtempvals["DESC"] = currdesc.concat(" Regular Size")
-                currtempvals["GTIN"] = "'".concat(UPCS[upccount])
-                currtempvals["SKU"] = currsku
-                currtempvals["Quantity"] = "1~1~1~1~1~1"
-                currtempvals["ChildGTINs"] = "".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3], "~", currUPCS[4], "~", currUPCS[5])
-                mixedcases.push(currtempvals)
-                //currUPCS.push(UPCS[upccount])
-                //GS1Sheet.addRow(1, { GTIN: UPCS[upccount], PackagingLevel: "Mixed Case", Description: currdesc.concat(" Regular Size"), SKU: currsku, Quantity: "1~1~1~1~1~1", ChildGTINs: "".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3], "~", currUPCS[4], "~", currUPCS[5]) }, function (err) { if (err) { console.log(err); } });
+              apRow(true,"'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" 14"),SKU.concat("-14"),currdesc.concat(" Regular Size"),"'".concat(UPCS[upccount]),currsku,"1~1~1~1~1~1","".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3], "~", currUPCS[4], "~", currUPCS[5]))
+              // GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 14"), SKU: gsrows[i].SKU.concat("-14") }, function () {
+              //   upccount = upccount + 1
+              //   const currtempvals = [["DESC"], ["GTIN"], ["SKU"], ["Quantity"], ["ChildGTINs"]]
+              //   currtempvals["DESC"] = currdesc.concat(" Regular Size")
+              //   currtempvals["GTIN"] = "'".concat(UPCS[upccount])
+              //   currtempvals["SKU"] = currsku
+              //   currtempvals["Quantity"] = "1~1~1~1~1~1"
+              //   currtempvals["ChildGTINs"] = "".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3], "~", currUPCS[4], "~", currUPCS[5])
+              //   mixedcases.push(currtempvals)
+              //   //currUPCS.push(UPCS[upccount])
+              //   //GS1Sheet.addRow(1, { GTIN: UPCS[upccount], PackagingLevel: "Mixed Case", Description: currdesc.concat(" Regular Size"), SKU: currsku, Quantity: "1~1~1~1~1~1", ChildGTINs: "".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3], "~", currUPCS[4], "~", currUPCS[5]) }, function (err) { if (err) { console.log(err); } });
 
-              });
+              // });
 
 
             }
@@ -490,33 +522,38 @@ app.get('/AdminPanel', function (req, res) {
               const SKU = gsrows[i].SKU
               upccount = upccount + 1
               currUPCS.push(UPCS[upccount])
-              GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 14"), SKU: gsrows[i].SKU.concat("-14") }, function (err) { if (err) { console.log(err); } });
+              apRow(false,"'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" 14"),SKU.concat("-14"))
+              //GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 14"), SKU: gsrows[i].SKU.concat("-14") }, function (err) { if (err) { console.log(err); } });
               upccount = upccount + 1
               currUPCS.push(UPCS[upccount])
-              GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 16"), SKU: gsrows[i].SKU.concat("-16") }, function (err) { if (err) { console.log(err); } });
+              apRow(false,"'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" 16"),SKU.concat("-16"))
+              //GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 16"), SKU: gsrows[i].SKU.concat("-16") }, function (err) { if (err) { console.log(err); } });
               upccount = upccount + 1
               currUPCS.push(UPCS[upccount])
-              GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 18"), SKU: gsrows[i].SKU.concat("-18") }, function (err) { if (err) { console.log(err); } });
+              apRow(false,"'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" 18"),SKU.concat("-18"))
+              //GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 18"), SKU: gsrows[i].SKU.concat("-18") }, function (err) { if (err) { console.log(err); } });
               upccount = upccount + 1
               currUPCS.push(UPCS[upccount])
-              GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 20"), SKU: gsrows[i].SKU.concat("-20") }, function (err) { if (err) { console.log(err); } });
+              apRow(false,"'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" 20"),SKU.concat("-20"))
+              //GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 20"), SKU: gsrows[i].SKU.concat("-20") }, function (err) { if (err) { console.log(err); } });
               upccount = upccount + 1
               currUPCS.push(UPCS[upccount])
 
               const currdesc = gsrows[i].DESCRIPTION
               const currsku = gsrows[i].SKU
-              GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 22"), SKU: gsrows[i].SKU.concat("-22") }, function () {
-                upccount = upccount + 1
-                //currUPCS.push(UPCS[upccount])
-                const currtempvals = [["DESC"], ["GTIN"], ["SKU"], ["Quantity"], ["ChildGTINs"]]
-                currtempvals["DESC"] = currdesc.concat(" Plus Size")
-                currtempvals["GTIN"] = "'".concat(UPCS[upccount])
-                currtempvals["SKU"] = currsku.concat("-X")
-                currtempvals["Quantity"] = "1~2~2~1~1"
-                currtempvals["ChildGTINs"] = "".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3], "~", currUPCS[4])
-                mixedcases.push(currtempvals)
-                //GS1Sheet.addRow(1, { GTIN: UPCS[upccount], PackagingLevel: "Mixed Case", Description: currdesc.concat(" Plus Size"), SKU: currsku.concat("-X"), Quantity: "1~2~2~1~1", ChildGTINs: "".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3], "~", currUPCS[4]) }, function (err) { if (err) { console.log(err); } });
-              });
+              apRow(true,"'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" 22"),SKU.concat("-22"),currdesc.concat(" Plus Size"),"'".concat(UPCS[upccount]),currsku.concat("-X"),"1~2~2~1~1","".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3], "~", currUPCS[4]))
+              // GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 22"), SKU: gsrows[i].SKU.concat("-22") }, function () {
+              //   upccount = upccount + 1
+              //   //currUPCS.push(UPCS[upccount])
+              //   const currtempvals = [["DESC"], ["GTIN"], ["SKU"], ["Quantity"], ["ChildGTINs"]]
+              //   currtempvals["DESC"] = currdesc.concat(" Plus Size")
+              //   currtempvals["GTIN"] = "'".concat(UPCS[upccount])
+              //   currtempvals["SKU"] = currsku.concat("-X")
+              //   currtempvals["Quantity"] = "1~2~2~1~1"
+              //   currtempvals["ChildGTINs"] = "".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3], "~", currUPCS[4])
+              //   mixedcases.push(currtempvals)
+              //   //GS1Sheet.addRow(1, { GTIN: UPCS[upccount], PackagingLevel: "Mixed Case", Description: currdesc.concat(" Plus Size"), SKU: currsku.concat("-X"), Quantity: "1~2~2~1~1", ChildGTINs: "".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3], "~", currUPCS[4]) }, function (err) { if (err) { console.log(err); } });
+              // });
 
 
 
@@ -526,6 +563,7 @@ app.get('/AdminPanel', function (req, res) {
               const currUPCS = [];
               upccount = upccount + 1
               currUPCS.push(UPCS[upccount])
+
               const currtempvals = [["DESC"], ["GTIN"], ["SKU"], ["Quantity"], ["ChildGTINs"]]
               currtempvals["DESC"] = gsrows[i].DESCRIPTION.concat("")
               currtempvals["GTIN"] = "'".concat(UPCS[upccount])
@@ -540,36 +578,42 @@ app.get('/AdminPanel', function (req, res) {
               const currUPCS = [];
               upccount = upccount + 1
               currUPCS.push(UPCS[upccount])
-              GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 7"), SKU: gsrows[i].SKU.concat("-7") }, function (err) { if (err) { console.log(err); } });
+              apRow(false,"'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" 7"),SKU.concat("-7"))
+              //GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 7"), SKU: gsrows[i].SKU.concat("-7") }, function (err) { if (err) { console.log(err); } });
               upccount = upccount + 1
               currUPCS.push(UPCS[upccount])
-              GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 8"), SKU: gsrows[i].SKU.concat("-8") }, function (err) { if (err) { console.log(err); } });
+              apRow(false,"'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" 8"),SKU.concat("-8"))
+              //GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 8"), SKU: gsrows[i].SKU.concat("-8") }, function (err) { if (err) { console.log(err); } });
               upccount = upccount + 1
               currUPCS.push(UPCS[upccount])
-              GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 9"), SKU: gsrows[i].SKU.concat("-9") }, function (err) { if (err) { console.log(err); } });
+              apRow(false,"'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" 9"),SKU.concat("-9"))
+              //GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 9"), SKU: gsrows[i].SKU.concat("-9") }, function (err) { if (err) { console.log(err); } });
               upccount = upccount + 1
               currUPCS.push(UPCS[upccount])
-              GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 10"), SKU: gsrows[i].SKU.concat("-10") }, function (err) { if (err) { console.log(err); } });
+              apRow(false,"'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" 10"),SKU.concat("-10"))
+              //GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 10"), SKU: gsrows[i].SKU.concat("-10") }, function (err) { if (err) { console.log(err); } });
               upccount = upccount + 1
               currUPCS.push(UPCS[upccount])
               const currdesc = gsrows[i].DESCRIPTION
               const currsku = gsrows[i].SKU
-              GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 11"), SKU: gsrows[i].SKU.concat("-11") }, function () {
-                upccount = upccount + 1
-                const currtempvals = [["DESC"], ["GTIN"], ["SKU"], ["Quantity"], ["ChildGTINs"]]
-                currtempvals["DESC"] = currdesc.concat("")
-                currtempvals["GTIN"] = "'".concat(UPCS[upccount])
-                currtempvals["SKU"] = currsku.concat("")
-                currtempvals["Quantity"] = "1~1~1~1~1"
-                currtempvals["ChildGTINs"] = "".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3], "~", currUPCS[4])
-                mixedcases.push(currtempvals)
-                //GS1Sheet.addRow(1, { GTIN: UPCS[upccount], PackagingLevel: "Mixed Case", Description: currdesc.concat(""), SKU: currsku, Quantity: "", ChildGTINs: "".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3], "~", currUPCS[4]) }, function (err) { if (err) { console.log(err); } });
-              });
+              apRow(true,"'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" 11"),SKU.concat("-11"),currdesc.concat(""),"'".concat(UPCS[upccount]),currsku.concat(""),"1~1~1~1~1","".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3], "~", currUPCS[4]))
+              // GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 11"), SKU: gsrows[i].SKU.concat("-11") }, function () {
+              //   upccount = upccount + 1
+              //   const currtempvals = [["DESC"], ["GTIN"], ["SKU"], ["Quantity"], ["ChildGTINs"]]
+              //   currtempvals["DESC"] = currdesc.concat("")
+              //   currtempvals["GTIN"] = "'".concat(UPCS[upccount])
+              //   currtempvals["SKU"] = currsku.concat("")
+              //   currtempvals["Quantity"] = "1~1~1~1~1"
+              //   currtempvals["ChildGTINs"] = "".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3], "~", currUPCS[4])
+              //   mixedcases.push(currtempvals)
+              //   //GS1Sheet.addRow(1, { GTIN: UPCS[upccount], PackagingLevel: "Mixed Case", Description: currdesc.concat(""), SKU: currsku, Quantity: "", ChildGTINs: "".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3], "~", currUPCS[4]) }, function (err) { if (err) { console.log(err); } });
+              // });
 
 
 
 
             };
+           
           };
 
 
@@ -590,6 +634,7 @@ app.get('/AdminPanel', function (req, res) {
   //}catch{}
 
 });
+
 
 
 
