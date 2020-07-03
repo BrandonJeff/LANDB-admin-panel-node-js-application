@@ -236,13 +236,13 @@ app.get('/AdminPanel', function (req, res) {
     res.sendFile('adminpanel.html', { root: __dirname })
   }
   if (action == "MixedCases") {
-    var GS1Sheet = new GoogleSpreadsheet(var1);
+    var GS1Sheet = new GoogleSpreadsheet(var1); 
     res.send(mixedcases)
   
     GS1Sheet.useServiceAccountAuth(creds, function (err) {
       var i = 0
 
-      function gsadd() {
+      function gsadd() {  
 
         console.log(i)
         console.log(mixedcases[i])
@@ -271,6 +271,15 @@ app.get('/AdminPanel', function (req, res) {
 
     });
   }
+  if (action == "PROD"){
+    //Product code;Language;Status;Product id;Category;Price;Quantity;Min quantity;Max quantity;Detailed image;Product name;Description;Product URL;Image URL;Detailed image URL;Store;Inventory tracking
+    var inputsheet = new GoogleSpreadsheet(var1);
+    var outputsheet = new GoogleSpreadsheet(var2);
+    inputsheet.useServiceAccountAuth(creds, function(){
+
+    });
+
+  };
   if (action == "DATA") {
     var insertsheet = new GoogleSpreadsheet(var1);
     const input = []
@@ -372,11 +381,12 @@ app.get('/AdminPanel', function (req, res) {
 
           function apRow(last, GTIN ,PL, DESC, SKU, currdesc,currgt, currsku, currqua, currcgt){
             console.log("".concat(last, GTIN ,PL, DESC, SKU))
-            if (last) {
+            if (last) { 
               GS1Sheet.addRow(1, { GTIN: GTIN, PackagingLevel: PL, Description: DESC, SKU: SKU }, function (err) { if (err) { apRow(true,GTIN,PL,DESC,SKU, currdesc,currgt, currsku, currqua, currcgt ) }else{
+                upccount = upccount + 1
                 const currtempvals = [["DESC"], ["GTIN"], ["SKU"], ["Quantity"], ["ChildGTINs"]]
                 currtempvals["DESC"] = currdesc
-                currtempvals["GTIN"] = currgt
+                currtempvals["GTIN"] = "'".concat(UPCS[upccount])
                 currtempvals["SKU"] = currsku
                 currtempvals["Quantity"] = currqua
                 currtempvals["ChildGTINs"] = currcgt
@@ -413,7 +423,7 @@ app.get('/AdminPanel', function (req, res) {
               
               const currdesc = gsrows[i].DESCRIPTION
               const currsku = gsrows[i].SKU
-              upccount = upccount + 1
+              
               apRow(true,"'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" Large"),SKU.concat("-L"),currdesc.concat(" Regular Size"),"'".concat(UPCS[upccount]),currsku,"2~2~2","".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2]))
               // GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" Large"), SKU: SKU.concat("-L") }, function () {
                 
@@ -444,9 +454,9 @@ app.get('/AdminPanel', function (req, res) {
               currUPCS.push(UPCS[upccount])
               apRow(false,"'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" 2XL"),SKU.concat("-2XL"))
               //GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 2XL"), SKU: SKU.concat("-2XL") }, function (err) { if (err) { console.log(err); } });
+              //upccount = upccount + 1
               upccount = upccount + 1
               currUPCS.push(UPCS[upccount])
-
 
               const currdesc = gsrows[i].DESCRIPTION
               const currsku = gsrows[i].SKU
