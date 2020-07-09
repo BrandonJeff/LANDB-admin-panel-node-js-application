@@ -20,12 +20,7 @@ var tempt = 0;
 var PastebinAPI = require('pastebin-js');
 
 var pastebin = new PastebinAPI();
-/* var pastebin = new PastebinAPI('af6cd4c1fab6df54b45af3aa4e57ced6');
-pastebin = new PastebinAPI({
-  'api_dev_key' : 'af6cd4c1fab6df54b45af3aa4e57ced6',
-  'api_user_name' : 'brandonjeff',
-  'api_user_password' : 'LANDB2020'
- }); */
+
 app.use(fileUpload());
 
 // Create a document object using the ID of the spreadsheet - obtained from its URL.
