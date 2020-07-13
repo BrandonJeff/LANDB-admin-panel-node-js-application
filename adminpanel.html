@@ -6,11 +6,10 @@
 <p><input id="InputUpc" name="fname" type="text" /></p>
 <p>&nbsp;Input Sheet Id:</p>
 <p><input id="Input" name="fname" type="text" /></p>
-<p>Output Gs1 Sheet Id:</p>
-<p><input id="Output" name="fname" type="text" /></p>
 
-<button onclick="myFunction()">Insert Each</button>
-<button onclick="myFunctionA()">Insert Mixed</button>
+
+<button onclick="myFunction()">Insert</button>
+<button onclick="myFunctionA()">Download</button>
 
 
 
@@ -51,16 +50,12 @@
       console.log("CLICKED!");
       window.open("http://".concat(IPV4, ":8080/AdminPanel?action=TGS1")
         .concat("&var1=", document.getElementById("Input").value)
-        .concat("&var2=", document.getElementById("Output").value)
+        .concat("&var2=", "NONE")
         .concat("&var3=", document.getElementById("InputUpc").value)
       )
     }
     function myFunctionA() {
-      window.open("http://".concat(IPV4, ":8080/AdminPanel?action=MixedCases")
-        .concat("&var1=", document.getElementById("Output").value)
-        .concat("&var2=", "N/A")
-        .concat("&var3=", "N/A")
-      )
+      window.open("http://".concat(IPV4, ":8080/AdminPanel?action=out"))
     }
     function myFunctionI() {
       window.open("http://".concat(IPV4, ":8080/AdminPanel?action=DATA&var1=",document.getElementById("OutputI").value,"&var2=") 
