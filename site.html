@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <link rel="stylesheet" type="text/css" href="mystyle.css">
-<button onclick="myFunction()">Insert</button>
+
 <body style="background-color:powderblue;"></body>
-<p>Regular</p>
-<p>&nbsp;SKU:</p>
-<p><input id="SKU" name="fname" type="text" /> <br />Date Created:&nbsp;</p> 
-<p><input id="Date Created" name="fname" type="text" /> <br />Brand</p>
-<p><input id="Brand" name="fname" type="text" /><br />Description</p>
-<p><input id="Description" name="fname" type="text" /></p>
-<p>Category</p>
-<p><input id="Category" name="fname" type="text" /></p>
-<p><br />QTY of REG PACKS</p>
-<p><input id="QTY of REG PACKS" name="fname" type="text" /> <br />QTY of PLUS PACKS</p>
-<p><input id="QTY of PLUS PACKS" name="fname" type="text" /></p>
+<h1>NEW ORDER LOADER</h1>
+<h2><b>Clothing</b></h2>
+<button onclick="myFunction()">Insert</button>
+<p>PO_NUMBER: <input id="PON" name="fname" type="text" /></p>
+<p>SKU: <input id="SKU" name="fname" type="text" /></p>
+<p>Date Created: <input id="Date Created" name="fname" type="text" /></p>
+<P>Brand: <input id="Brand" name="fname" type="text" />
+<P>Description: <input id="Description" name="fname" type="text" style="width: 450px; font-size:8pt;" />
+<P>Category: <input id="Category" name="fname" type="text" />
+<P>QTY of REG PACKS: <input id="QTY of REG PACKS" name="fname" type="text" />
+<P>QTY of PLUS PACKS: <input id="QTY of PLUS PACKS" name="fname" type="text" />
 <p><label for="cars">Pick a reg size: </label></p>
 <p><select id="REGSIZE" name="cars">
 <option value=""></option>
@@ -21,41 +21,38 @@
 <option value="3 per pack">3 per pack</option>
 <option value="1 per pack">1 per pack</option>
 <option value="7, 8, 9, 10, 11">7, 8, 9, 10, 11</option>
+<option value="0-3(1),3-6(2),6-9(2),9-12(1)">0-3(1),3-6(2),6-9(2),9-12(1)</option>
+<option value="XS(1),S(2),M(2),L(2),XL(1)">XS(1),S(2),M(2),L(2),XL(1)</option>
+
 </select></p>
 <p><label for="PLUSSIZE">Pick a plus size: </label></p>
 <p><select id="PLUSSIZE" name="cars">
 <option value=""></option>
 <option value="2(XL), 2(2XL), 2(3XL)">2(XL), 2(2XL), 2(3XL)</option>
 <option value="1(14), 2(16), 2(18), 1(20), 1(22)">1(14), 2(16), 2(18), 1(20), 1(22)</option>
+<option value="2(S), 2(M), 2(L), 1(XL)">2(S), 2(M), 2(L), 1(XL)</option>
 <option value="3 per pack">3 per pack</option>
 <option value="1 per pack">1 per pack</option>
 <option value="7, 8, 9, 10, 11">7, 8, 9, 10, 11</option>
-</select><br />Fabrication</p>
-<p><input id="Fabrication" name="fname" type="text" /></p>
-<p><br />PP Sample(Y/N)</p>
-<p><input id="PP Sample(Y/N)" name="fname" type="text" /></p>
-<p><br />PP Sample Size</p>
-<p><input id="PP Sample Size" name="fname" type="text" /></p>
-<p><br />Designer</p>
-<p><input id="Designer" name="fname" type="text" /></p>
-<p><br />Vendor</p>
-<p><input id="Vendor" name="fname" type="text" /></p>
-<p><br />Ship Date</p>
-<p><input id="Ship Date" name="fname" type="text" /></p>
-<p><br />No Later Than</p>
-<p><input id="No Later Than" name="fname" type="text" /></p>
-<p><br />Shipping Method</p>
-<p><input id="Shipping Method" name="fname" type="text" /></p>
-<p><br />Status</p>
-<p><input id="Status" name="Status" type="text" /></p>
+</select>
+<P>Fabrication: <input id="Fabrication" name="fname" type="text" />
+<P>PP Sample(Y/N): <input id="PP Sample(Y/N)" name="fname" type="text" />
+<P>PP Sample Size: <input id="PP Sample Size" name="fname" type="text" />
+<P>Designer: <input id="Designer" name="fname" type="text" />
+<P>Vendor: <input id="Vendor" name="fname" type="text" />
+<P>Ship Date: <input id="Ship Date" name="fname" type="text" />
+<P>No Later Than: <input id="No Later Than" name="fname" type="text" />
+<P>Shipping Method: <input id="Shipping Method" name="fname" type="text" />
+<P>Status: <input id="Status" name="fname" type="text" />
 
-<div style="position: absolute; left: 800px; top: 0px">
-<p>Accessory</p>
+
+<div style="position: absolute; left: 800px; top: 60px">
+
+<h2><b>Accessories</b></h2>
 <button onclick="myFunctionA()">Insert Accessory</button>
-
-<p>&nbsp;SKU:</p>
-<p ><input id="SKUa" name="fname" type="text" /> <br />Date Created:&nbsp;</p>
-<p><input id="Date Createda" name="fname" type="text" /> <br />Brand</p>
+<p>PO_NUMBER: <input id="PONa" name="fname" type="text" /></p>
+<p>&nbsp;SKU: <input id="SKUa" name="fname" type="text" /></p>
+<p>Date Created: <input id="Date Createda" name="fname" type="text" /></p> <br />Brand</p>
 <p><input id="Branda" name="fname" type="text" /><br />Description</p>
 <p><input id="Descriptiona" name="fname" type="text" /></p>
 <p>Category</p>
@@ -83,11 +80,19 @@
 <p>STATUS</p>
 <p><input id="STATUSa" name="fname" type="text" /></p>
 </div>
+<div style="position: absolute; left: 1200px; top: 0px">
+    <button onclick="myFunctionPanel()">Administration Panel</button>
+    <button onclick="myFunctionMesh()">Mesh packs</button>
+</div>
+
   <script>
+    document.getElementById('Description').style.length="400px";
+
     const IPV4 = "192.168.1.63"
     function myFunction() {
       
       console.log("CLICKED!");
+      
       window.open("http://".concat(IPV4,":8080/Insert?SKU=").concat(document.getElementById("SKU").value)
       .concat("&DateCreated=",document.getElementById("Date Created").value)
       .concat("&Brand=",document.getElementById("Brand").value)
@@ -106,10 +111,11 @@
       .concat("&NoLaterThan=",document.getElementById("No Later Than").value)
       .concat("&ShippingMethod=",document.getElementById("Shipping Method").value)
       .concat("&Status=",document.getElementById("Status").value)
+      .concat("&PON=",document.getElementById("PON").value)
       )
     }
     function myFunctionA() {
-        window.open("http://".concat(IPV4,":8080/InsertA?SKU=").concat(document.getElementById("SKUa").value) 
+      window.open("http://".concat(IPV4,":8080/InsertA?SKU=").concat(document.getElementById("SKUa").value) 
         .concat("&DateCreated=",document.getElementById("Date Createda").value)
         .concat("&Brand=",document.getElementById("Branda").value)
         .concat("&Description=",document.getElementById("Descriptiona").value)
@@ -125,8 +131,16 @@
         .concat("&NoLaterThan=",document.getElementById("No Later Thana").value)
         .concat("&ShippingMethod=",document.getElementById("ShippingMethoda").value)
         .concat("&STATUS=",document.getElementById("STATUSa").value)
+        .concat("&PONa=",document.getElementById("PONa").value)
         )
-    }
+     }
+     function myFunctionPanel(){
+      window.open("http://".concat(IPV4,":8080/AdminPanel?action=Panel"))
+     }
+     function myFunctionMesh(){
+      window.open("http://".concat(IPV4,":8080/meshpack"))
+      }
+    
 
 
     </script>
