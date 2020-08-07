@@ -531,7 +531,7 @@ app.get('/AdminPanel', function (req, res) {
             upccount = -1
             for (i = 0; i < gsrows.length; i++) {
 
-              if (gsrows[i].REGULAR_SIZE_RUN == "2(S), 2(M), 2(L)") {
+              if (gsrows[i].REGULAR_SIZE_RUN == "") {
 
                 const currUPCS = [];
                 const DESCRIPTION = gsrows[i].DESCRIPTION
@@ -623,24 +623,24 @@ app.get('/AdminPanel', function (req, res) {
                 const currUPCS = [];
                 const DESCRIPTION = gsrows[i].DESCRIPTION
                 const SKU = gsrows[i].SKU
-              
-               
+
+
                 if (PLUSupc != "NO") {
-                    
+
                   console.log("HAS".concat(PLUSupc))
-                  
+
                   console.log("set = ".concat(PLUSupc))
-                  currUPCS.push(PLUSupc)   
-                
-                
-                
-                 
-                } else { 
-                  
+                  currUPCS.push(PLUSupc)
+
+
+
+
+                } else {
+
                   upccount = upccount + 1
                   currUPCS.push(UPCS[upccount])
                   csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 14"), SKU: SKU.concat("-14") }) //child #0  
-                
+
                 }
                 upccount = upccount + 1
                 currUPCS.push(UPCS[upccount])
@@ -665,142 +665,131 @@ app.get('/AdminPanel', function (req, res) {
 
               }
 
-                if (gsrows[i].BPB.includes("per")) {
+              if (gsrows[i].BPB.includes("per")) {
 
-                  const DESCRIPTION = gsrows[i].DESCRIPTION
-                  const SKU = gsrows[i].SKU
-                  upccount = upccount + 1
-                  csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "each", Description: DESCRIPTION.concat(""), SKU: SKU.concat("") })
-
-
-
-
-                  if (gsrows[i].PLUS_SIZE_RUN == "7, 8, 9, 10, 11") {
-                    const currUPCS = [];
-                    const DESCRIPTION = gsrows[i].DESCRIPTION
-                    const SKU = gsrows[i].SKU
-                    upccount = upccount + 1
-                    currUPCS.push(UPCS[upccount])
-
-                    csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 7"), SKU: SKU.concat("-7") })
-                    upccount = upccount + 1
-                    currUPCS.push(UPCS[upccount])
-
-                    csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 8"), SKU: SKU.concat("-8") })
-                    upccount = upccount + 1
-                    currUPCS.push(UPCS[upccount])
-
-                    csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 9"), SKU: SKU.concat("-9") })
-                    upccount = upccount + 1
-                    currUPCS.push(UPCS[upccount])
-
-                    csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 10"), SKU: SKU.concat("-10") })
-                    upccount = upccount + 1
-                    currUPCS.push(UPCS[upccount])
-
-                    csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 11"), SKU: SKU.concat("-11") })
-
-                    upccount = upccount + 1
-                    csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Mixed Case", Description: DESCRIPTION.concat(""), SKU: SKU.concat(""), ChildGTINs: "".concat("".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3], "~", currUPCS[4])), Quantity: "1~1~1~1~1" })
-                    // const currUPCS = [];
-                    // upccount = upccount + 1
-                    // currUPCS.push(UPCS[upccount])
-                    // apRow(false, "'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" 7"), SKU.concat("-7"))
-                    // //GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 7"), SKU: gsrows[i].SKU.concat("-7") }, function (err) { if (err) { console.log(err); } });
-                    // upccount = upccount + 1
-                    // currUPCS.push(UPCS[upccount])
-                    // apRow(false, "'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" 8"), SKU.concat("-8"))
-                    // //GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 8"), SKU: gsrows[i].SKU.concat("-8") }, function (err) { if (err) { console.log(err); } });
-                    // upccount = upccount + 1
-                    // currUPCS.push(UPCS[upccount])
-                    // apRow(false, "'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" 9"), SKU.concat("-9"))
-                    // //GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 9"), SKU: gsrows[i].SKU.concat("-9") }, function (err) { if (err) { console.log(err); } });
-                    // upccount = upccount + 1
-                    // currUPCS.push(UPCS[upccount])
-                    // apRow(false, "'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" 10"), SKU.concat("-10"))
-                    // //GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 10"), SKU: gsrows[i].SKU.concat("-10") }, function (err) { if (err) { console.log(err); } });
-                    // upccount = upccount + 1
-                    // currUPCS.push(UPCS[upccount])
-                    // const currdesc = gsrows[i].DESCRIPTION
-                    // const currsku = gsrows[i].SKU
-                    // apRow(true, "'".concat(UPCS[upccount]), "Each", DESCRIPTION.concat(" 11"), SKU.concat("-11"), currdesc.concat(""), "'".concat(UPCS[upccount]), currsku.concat(""), "1~1~1~1~1", "".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3], "~", currUPCS[4]))
-                    // // GS1Sheet.addRow(1, { GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: gsrows[i].DESCRIPTION.concat(" 11"), SKU: gsrows[i].SKU.concat("-11") }, function () {
-                    // //   upccount = upccount + 1
-                    // //   const currtempvals = [["DESC"], ["GTIN"], ["SKU"], ["Quantity"], ["ChildGTINs"]]
-                    // //   currtempvals["DESC"] = currdesc.concat("")
-                    // //   currtempvals["GTIN"] = "'".concat(UPCS[upccount])
-                    // //   currtempvals["SKU"] = currsku.concat("")
-                    // //   currtempvals["Quantity"] = "1~1~1~1~1"
-                    // //   currtempvals["ChildGTINs"] = "".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3], "~", currUPCS[4])
-                    // //   mixedcases.push(currtempvals)
-                    // //   //GS1Sheet.addRow(1, { GTIN: UPCS[upccount], PackagingLevel: "Mixed Case", Description: currdesc.concat(""), SKU: currsku, Quantity: "", ChildGTINs: "".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3], "~", currUPCS[4]) }, function (err) { if (err) { console.log(err); } });
-                    // // });
+                const DESCRIPTION = gsrows[i].DESCRIPTION
+                const SKU = gsrows[i].SKU
+                upccount = upccount + 1
+                csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "each", Description: DESCRIPTION.concat(""), SKU: SKU.concat("") })
+              }
 
 
 
+              if (gsrows[i].PLUS_SIZE_RUN == "7, 8, 9, 10, 11") {
+                const currUPCS = [];
+                const DESCRIPTION = gsrows[i].DESCRIPTION
+                const SKU = gsrows[i].SKU
+                upccount = upccount + 1
+                currUPCS.push(UPCS[upccount])
 
-                  };
-                  if (gsrows[i].REGULAR_SIZE_RUN == "0-3(1),3-6(2),6-9(2),9-12(1)") {
-                    const currUPCS = [];
-                    const DESCRIPTION = gsrows[i].DESCRIPTION
-                    const SKU = gsrows[i].SKU
-                    upccount = upccount + 1
-                    currUPCS.push(UPCS[upccount])
+                csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 7"), SKU: SKU.concat("-7") })
+                upccount = upccount + 1
+                currUPCS.push(UPCS[upccount])
 
-                    csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 0-3"), SKU: SKU.concat("-0-3") })
-                    upccount = upccount + 1
-                    currUPCS.push(UPCS[upccount])
+                csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 8"), SKU: SKU.concat("-8") })
+                upccount = upccount + 1
+                currUPCS.push(UPCS[upccount])
 
-                    csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 3-6"), SKU: SKU.concat("-3-6") })
-                    upccount = upccount + 1
-                    currUPCS.push(UPCS[upccount])
+                csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 9"), SKU: SKU.concat("-9") })
+                upccount = upccount + 1
+                currUPCS.push(UPCS[upccount])
 
-                    csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 6-9"), SKU: SKU.concat("-6-9") })
-                    upccount = upccount + 1
-                    currUPCS.push(UPCS[upccount])
+                csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 10"), SKU: SKU.concat("-10") })
+                upccount = upccount + 1
+                currUPCS.push(UPCS[upccount])
 
-                    csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 9-12"), SKU: SKU.concat("-9-12") })
-                    upccount = upccount + 1
-                    csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Mixed Case", Description: DESCRIPTION.concat(""), SKU: SKU.concat(""), ChildGTINs: "".concat("".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3])), Quantity: "1~2~2~1" })
-                  };
-                  if (gsrows[i].REGULAR_SIZE_RUN == "XS(1),S(2),M(2),L(2),XL(1)") {
-                    const currUPCS = [];
-                    const DESCRIPTION = gsrows[i].DESCRIPTION
-                    const SKU = gsrows[i].SKU
-                    upccount = upccount + 1
-                    currUPCS.push(UPCS[upccount])
+                csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 11"), SKU: SKU.concat("-11") })
 
-                    csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" Extra Small"), SKU: SKU.concat("-XS") })
-                    upccount = upccount + 1
-                    currUPCS.push(UPCS[upccount])
+                upccount = upccount + 1
+                csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Mixed Case", Description: DESCRIPTION.concat(""), SKU: SKU.concat(""), ChildGTINs: "".concat("".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3], "~", currUPCS[4])), Quantity: "1~1~1~1~1" })
 
-                    csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" Small"), SKU: SKU.concat("-S") })
-                    upccount = upccount + 1
-                    currUPCS.push(UPCS[upccount])
+              };
+              if (gsrows[i].REGULAR_SIZE_RUN == "0-3(1),3-6(2),6-9(2),9-12(1)") {
+                const currUPCS = [];
+                const DESCRIPTION = gsrows[i].DESCRIPTION
+                const SKU = gsrows[i].SKU
+                upccount = upccount + 1
+                currUPCS.push(UPCS[upccount])
 
-                    csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" Medium"), SKU: SKU.concat("-M") })
-                    upccount = upccount + 1
-                    currUPCS.push(UPCS[upccount])
+                csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 0-3"), SKU: SKU.concat("-0-3") })
+                upccount = upccount + 1
+                currUPCS.push(UPCS[upccount])
 
-                    csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" Large"), SKU: SKU.concat("-L") })
-                    upccount = upccount + 1
-                    currUPCS.push(UPCS[upccount])
+                csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 3-6"), SKU: SKU.concat("-3-6") })
+                upccount = upccount + 1
+                currUPCS.push(UPCS[upccount])
 
-                    csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" Extra Large"), SKU: SKU.concat("-XL") })
-                    upccount = upccount + 1
-                    csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Mixed Case", Description: DESCRIPTION.concat(""), SKU: SKU.concat(""), ChildGTINs: "".concat("".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3], "~", currUPCS[4])), Quantity: "1~2~2~2~1" })
-                  };
+                csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 6-9"), SKU: SKU.concat("-6-9") })
+                upccount = upccount + 1
+                currUPCS.push(UPCS[upccount])
 
-                }
-  
+                csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" 9-12"), SKU: SKU.concat("-9-12") })
+                upccount = upccount + 1
+                csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Mixed Case", Description: DESCRIPTION.concat(""), SKU: SKU.concat(""), ChildGTINs: "".concat("".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3])), Quantity: "1~2~2~1" })
+              };
+              if (gsrows[i].REGULAR_SIZE_RUN == "XS(1),S(2),M(2),L(2),XL(1)") {
+                const currUPCS = [];
+                const DESCRIPTION = gsrows[i].DESCRIPTION
+                const SKU = gsrows[i].SKU
+                upccount = upccount + 1
+                currUPCS.push(UPCS[upccount])
 
+                csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" Extra Small"), SKU: SKU.concat("-XS") })
+                upccount = upccount + 1
+                currUPCS.push(UPCS[upccount])
+
+                csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" Small"), SKU: SKU.concat("-S") })
+                upccount = upccount + 1
+                currUPCS.push(UPCS[upccount])
+
+                csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" Medium"), SKU: SKU.concat("-M") })
+                upccount = upccount + 1
+                currUPCS.push(UPCS[upccount])
+ 
+
+                csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" Large"), SKU: SKU.concat("-L") })
+                upccount = upccount + 1
+                currUPCS.push(UPCS[upccount])
+
+                csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" Extra Large"), SKU: SKU.concat("-XL") })
+                upccount = upccount + 1
+                csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Mixed Case", Description: DESCRIPTION.concat(""), SKU: SKU.concat(""), ChildGTINs: "".concat("".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3], "~", currUPCS[4])), Quantity: "1~2~2~2~1" })
+              };
+              if (gsrows[i].REGULAR_SIZE_RUN == "2(S), 2(M), 2(L), 1(XL)") { 
+
+
+
+                const currUPCS = [];
+                const DESCRIPTION = gsrows[i].DESCRIPTION
+                const SKU = gsrows[i].SKU
+                upccount = upccount + 1
+                currUPCS.push(UPCS[upccount])
+
+                csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" Small"), SKU: SKU.concat("-S") })
+                upccount = upccount + 1
+                currUPCS.push(UPCS[upccount])
+
+                csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" Medium"), SKU: SKU.concat("-M") })
+                upccount = upccount + 1
+                currUPCS.push(UPCS[upccount])
+ 
+
+                csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" Large"), SKU: SKU.concat("-L") })
+                upccount = upccount + 1
+                currUPCS.push(UPCS[upccount])
+                csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Each", Description: DESCRIPTION.concat(" Extra Large"), SKU: SKU.concat("-XL") })
+                upccount = upccount + 1
+                csvdata.push({ GTIN: "'".concat(UPCS[upccount]), PackagingLevel: "Mixed Case", Description: DESCRIPTION.concat(""), SKU: SKU.concat(""), ChildGTINs: "".concat("".concat(currUPCS[0], "~", currUPCS[1], "~", currUPCS[2], "~", currUPCS[3])), Quantity: "2~2~2~1" })                
+              }
+            
+          
             };
 
 
 
-          });
-        });
       });
+    });
+  });
     }).fail(function (err) { console.log(err) })
 
 
