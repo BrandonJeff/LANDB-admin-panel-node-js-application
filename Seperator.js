@@ -120,26 +120,28 @@ OrdersSheet.useServiceAccountAuth(creds, async function (err) {
     OrdersSheet.getRows(1, async function (err, rows) {
         console.log("DOOO")
         //console.log("len |".concat(Object.keys(rows).length));
-        const sizerunlib = [["2(S), 2(M), 2(L)"] , ["2(XL), 2(2XL), 2(3XL)" ], ["0-3(1),3-6(2),6-9(2),9-12(1)"] ,["1(4), 1(6), 1(8), 1(10), 1(12), 1(14)"],["1(14), 2(16), 2(18), 1(20), 1(22)"]]
+        const sizerunlib = [["2(S), 2(M), 2(L)"] , ["2(XL), 2(2XL), 2(3XL)" ], ["0-3(1),3-6(2),6-9(2),9-12(1)"] ,["1(4), 1(6), 1(8), 1(10), 1(12), 1(14)"],["1(14), 2(16), 2(18), 1(20), 1(22)"],["2(S), 2(M), 2(L), 1(XL)"]]
         sizerunlib["2(S), 2(M), 2(L)"] = "6,6,"
         sizerunlib["2(XL), 2(2XL), 2(3XL)" ] = "6,6,"
         sizerunlib["2(XL), 2(2XL), 2(3XL)" ] = "6,6,"
         sizerunlib["0-3(1),3-6(2),6-9(2),9-12(1)"] = "6,6,"
         sizerunlib["1(4), 1(6), 1(8), 1(10), 1(12), 1(14)"] = "6,6,"
         sizerunlib["1(14), 2(16), 2(18), 1(20), 1(22)"] = "7,7,"
+        sizerunlib["2(S), 2(M), 2(L), 1(XL)"] = "7,7,"
 
         for (i = 0; i < Object.keys(rows).length; i++) {
 
 
             //tempdes = [[["DESCRIPTION"]= rows[i].description,["SKU"] = rows[i].SKU,["REGULAR_SIZE_RUN"] = rows[i].REGULAR_SIZE_RUN,["PLUS_SIZE_RUN"] = rows[i].PLUS_SIZE_RUN]]
             const tempvals = [["DESCRIPTION"], ["SKU"], ["Category"]]
+            
             tempvals["DESCRIPTION"] = rows[i].description
             tempvals["SKU"] = rows[i].sku
             //	FACE MASKS/MEDICAL SUPPLIES 
             var ETA = "" 
             ETA = rows[i].nolaterthan 
             
-            
+                
                 if (rows[i].regularsizerun != "" ){
                     if (rows[i].category == "Headwear"){
                         
@@ -153,6 +155,7 @@ OrdersSheet.useServiceAccountAuth(creds, async function (err) {
                         }
                     }
                 }
+                
                 if (rows[i].plussizerun != "" ){
                     if (rows[i].category == "Headwear"){
                         console.log(rows[i].description.concat("",",",rows[i].sku, ",","3,3,","Shop///Accessories///Headwear",",Pre-Order(PO)",",H"))
