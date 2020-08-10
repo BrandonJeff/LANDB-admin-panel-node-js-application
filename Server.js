@@ -1,22 +1,20 @@
-const http = require('http-server');
+
 const express = require("express");
 var fs = require("fs");
 const app = express();
 var bodyParser = require("body-parser");
-const Discord = require("discord.js");
+
 const IPV4 = "192.168.1.63"
-const fileUpload = require('express-fileupload');
-const token = ""
-const client = new Discord.Client();
+
 const Lib = ["SKU", "DATE CREATED", "BRAND", "DESCRIPTION", "CATEGORY", "QTY OF REG PACKS", "QTY OF PLUS PACKS", "REGULAR SIZE RUN", "PLUS SIZE RUN", "FABRICATION", "PP SAMPLE (Y/N)", "PP SAMPLE SIZE", "DESIGNER", "VENDOR", "SHIP DATE", "NO LATER THAN", "SHIPPING METHOD", "STATUS"]
 const LibA = ["SKU", "DATE CREATED", "BRAND", "DESCRIPTION", "CATEGORY", "BREAKDOWN FOR BOX", "BOX PACK", "ORDER", "PP SAMPLE (Y/N)", "PP SAMPLE SIZE", "DESIGNER", "VENDOR", "SHIP DATE", "NO LATER THAN", "SHIPPING METHOD", "STATUS"]
 var Jimp = require("jimp");
 var sourcec = 0;
-var uploadc = 0;
+
 var GoogleSpreadsheet = require('google-spreadsheet');
-var assignments = [];
+
 var creds = require('./client_secret.json');
-var tempt = 0;
+
 var PastebinAPI = require('pastebin-js');
 const csvdata = [];
 const csv = require('csv-parser');
@@ -24,7 +22,6 @@ const { spawn } = require('child_process');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 var pastebin = new PastebinAPI();
 
-app.use(fileUpload());
 
 // Create a document object using the ID of the spreadsheet - obtained from its URL.
 var doc = new GoogleSpreadsheet('1-fzrTkEqtPG2s41UIIG2iso8qYNB4KpiFbqoBv8Zh8U');
@@ -42,7 +39,7 @@ function sleep(ms) {
   });
 }
 
-app.use(bodyParser.urlencoded({ extended: false }));
+
 
 const port = 8080;
 
@@ -160,6 +157,8 @@ app.get('/Insert', function (req, res) {
   res.send('<p> adding data to sheet and on <a  href="http://'.concat(IPV4, ':8080/source?s='.concat(sourcec, '">source image</a></p>')))
 
 });
+
+//
 const Data = []
 app.get('/InsertA', function (req, res) {
   const choice = []
@@ -234,6 +233,8 @@ app.get('/InsertA', function (req, res) {
   });
   res.send('<p> adding data to sheet and on <a  href="http://'.concat(IPV4, ':8080/source?s='.concat(sourcec, '">source image</a></p>')))
 });
+
+//
 app.get('/', function (req, res) {
   res.sendFile('site.html', { root: __dirname })
 
@@ -479,47 +480,6 @@ app.get('/AdminPanel', function (req, res) {
 
           GS1Sheet.useServiceAccountAuth(creds, function (err) {
 
-            //rows[i].Description
-            //rows[i].SKU
-            //rows[i].PackagingLevel
-            //gsrows[i].DESCRIPTION
-            //gsrows[i].REGULAR_SIZE_RUN
-            //gsrows[i].PLUS_SIZE_RUN
-            //gsrows[i].SKU
-
-
-            //adding mother
-            // if (gsrows[i].REGULAR_SIZE_RUN == "2(S), 2(M), 2(L)") {
-
-            // }
-            // if (gsrows[i].REGULAR_SIZE_RUN == "1(4), 1(6), 1(8), 1(10), 1(12), 1(14)") {
-
-            // }
-
-
-            // function apRow(last, GTIN, PL, DESC, SKU, currdesc, currgt, currsku, currqua, currcgt) {
-            //   console.log("".concat(last, GTIN, PL, DESC, SKU))
-            //   if (last) {
-            //     GS1Sheet.addRow(1, { GTIN: GTIN, PackagingLevel: PL, Description: DESC, SKU: SKU }, function (err) {
-            //       if (err) { apRow(true, GTIN, PL, DESC, SKU, currdesc, currgt, currsku, currqua, currcgt) } else {
-            //         upccount = upccount + 1
-            //         const currtempvals = [["DESC"], ["GTIN"], ["SKU"], ["Quantity"], ["ChildGTINs"]]
-            //         currtempvals["DESC"] = currdesc
-            //         currtempvals["GTIN"] = "'".concat(UPCS[upccount])
-            //         currtempvals["SKU"] = currsku
-            //         currtempvals["Quantity"] = currqua
-            //         currtempvals["ChildGTINs"] = currcgt
-            //         mixedcases.push(currtempvals)
-            //         debugcount = debugcount + 1
-            //         console.log("".concat("DEBUG COUNT | ", debugcount))
-            //       }
-
-            //     });
-            //   } else {
-
-            //     GS1Sheet.addRow(1, { GTIN: GTIN, PackagingLevel: "Each", Description: DESC, SKU: SKU }, function (err) { if (err) { apRow(false, GTIN, "Each", DESC, SKU) } });
-            //   };
-            // };
             fs.copyFile("in.csv", "out.csv", (err) => {
               if (err) throw err;
               console.log('SourceFile was copied to DestinationFile');
@@ -531,7 +491,7 @@ app.get('/AdminPanel', function (req, res) {
             upccount = -1
             for (i = 0; i < gsrows.length; i++) {
 
-              if (gsrows[i].REGULAR_SIZE_RUN == "") {
+              if (gsrows[i].REGULAR_SIZE_RUN == "2(S), 2(M), 2(L)") {
 
                 const currUPCS = [];
                 const DESCRIPTION = gsrows[i].DESCRIPTION
@@ -581,6 +541,8 @@ app.get('/AdminPanel', function (req, res) {
 
 
               }
+
+
               var PLUSupc = "NO"
               if (gsrows[i].REGULAR_SIZE_RUN == "1(4), 1(6), 1(8), 1(10), 1(12), 1(14)") {
                 const currUPCS = [];
