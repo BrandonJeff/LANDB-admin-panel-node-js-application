@@ -5,3 +5,7 @@ npm install --save jimp
 npm install express
 
 npm i -s csv-parser
+
+npm install pastebin-js
+
+npm i csv-writer
